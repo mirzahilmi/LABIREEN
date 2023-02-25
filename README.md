@@ -1,4 +1,4 @@
-![Logo of the project](https://ibb.co/0yZmHXZ)
+![Logo of the project](https://i.ibb.co/RTPYRSP/logo-Placeholder.jpg)
 
 # LABIREEN
 > Food Ordering Management System Application
