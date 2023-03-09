@@ -13,13 +13,13 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
 
-      - name: Change Directory
-        run: cd ./customer_microservices/account_service
-
       - name: 📦 Go Setup
         uses: actions/setup-go@v3
         with:
           go-version: 'stable'
+      
+      - name: Change Directory
+        run: cd ./customer_microservices/account_service
         
       - name: 📦 Go Build
         run: go build cmd/main.go
