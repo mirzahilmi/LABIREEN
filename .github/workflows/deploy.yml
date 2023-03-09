@@ -22,7 +22,7 @@ jobs:
         run: cd ./customer_microservices/account_service
         
       - name: 📦 Go Build
-        run: go build cmd/main.go
+        run: go build -o ./main cmd/main.go
 
       - name: 📁 Send files via Rsync
         uses: Burnett01/rsync-deployments@5.2.1
