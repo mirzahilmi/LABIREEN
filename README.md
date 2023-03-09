@@ -1,4 +1,5 @@
-![Logo of the project](https://i.ibb.co/RTPYRSP/logo-Placeholder.jpg)
+
+![LABIREEN_README](https://user-images.githubusercontent.com/118604764/223939003-13621201-21db-402d-8eb5-775420ec699d.png)
 
 # LABIREEN
 > Food Ordering Management System Application
@@ -7,16 +8,15 @@ LABIREEN is an acronym of Colaboration and Integration of FILKOM Canteen
 
 ## Installing / Getting started
 
-A quick introduction of the minimal setup you need to get a hello world up &
-running.
+Before starting this project on your local environment, make sure you have [Git][Git Website] and [Go][Go Website] programming language installed.
 
 ```shell
-packagemanager install awesome-project
-awesome-project start
-awesome-project "Do something!"  # prints "Nah."
+git clone https://github.com/MirzaHilmi/LABIREEN.git
+cd server/internal/auth
+go run cmd/main.go
 ```
 
-Here you should say what actually happens when you execute the code above.
+You can now send HTTP requests to your localhost using [Postman][Postman Website] or any other API platform.
 
 ### Initial Configuration
 
@@ -131,3 +131,7 @@ state what the license is and how to find the text version of the license.
 Something like:
 
 "The code in this project is licensed under MIT license."
+
+[Git Website]: https://git-scm.com/
+[Go Website]: https://go.dev/
+[Postman Website]: https://www.postman.com/
