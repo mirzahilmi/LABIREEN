@@ -18,11 +18,24 @@ func NewCustomerHandler(svc services.CustomerService) *customerHandler {
 }
 
 func (cH *customerHandler) GetMe(ctx *gin.Context) {
-	user := ctx.MustGet("currentUser").(jwtx.CustomerClaims)
+	temp, exist := ctx.Get("currentUser")
+	if !exist {
+		log := response.ErrorLog{
+			Field:   "token",
+			Message: "Key token value does not exists",
+		}
+		response.Error(ctx, http.StatusNotFound, "Key error", log)
+	}
 
-	userResp, err := cH.svc.GetCustomer(user.Email)
+	user := temp.(jwtx.CustomerClaims)
+
+	userResp, err := cH.svc.GetCustomer(user.ID)
 	if err != nil {
-		response.FailOrError(ctx, http.StatusUnauthorized, "Invalid email or password", nil)
+		log := response.ErrorLog{
+			Field:   "ID",
+			Message: "ID sent is not valid",
+		}
+		response.Error(ctx, http.StatusNotFound, "Cannot find requested data", log)
 		return
 	}
 

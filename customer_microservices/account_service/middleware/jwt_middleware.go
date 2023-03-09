@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"errors"
 	"labireen/customer_microservices/account_service/utilities/jwtx"
 	"labireen/customer_microservices/account_service/utilities/response"
 	"net/http"
@@ -17,8 +16,13 @@ func ValidateToken() gin.HandlerFunc {
 
 		if !strings.HasPrefix(authorization, "Bearer ") {
 			ctx.Abort()
-			msg := "token not found"
-			response.FailOrError(ctx, http.StatusForbidden, msg, errors.New(msg))
+
+			log := response.ErrorLog{
+				Field:   "token",
+				Message: "Cannot find a valid token on bearer",
+			}
+
+			response.Error(ctx, http.StatusNotFound, "token not found", log)
 			return
 		}
 
@@ -28,7 +32,13 @@ func ValidateToken() gin.HandlerFunc {
 
 		if err := jwtx.DecodeToken(tokenJwt, &claims, jwtKey); err != nil {
 			ctx.Abort()
-			response.FailOrError(ctx, http.StatusUnauthorized, "unauthorized", err)
+
+			log := response.ErrorLog{
+				Field:   "token",
+				Message: err.Error(),
+			}
+
+			response.Error(ctx, http.StatusUnauthorized, "token error", log)
 			return
 		}
 

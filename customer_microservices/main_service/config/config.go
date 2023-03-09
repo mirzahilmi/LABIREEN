@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"labireen/customer_microservices/account_service/entities"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -30,7 +29,7 @@ func GetDB() (*gorm.DB, error) {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error: %v", err)
 	}
 
 	return db, nil
@@ -41,7 +40,5 @@ func ConnectDB() {
 }
 
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(
-		&entities.Customer{},
-	)
+	return db.AutoMigrate()
 }

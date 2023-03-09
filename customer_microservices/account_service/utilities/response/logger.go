@@ -4,49 +4,30 @@ import "github.com/gin-gonic/gin"
 
 type response struct {
 	Status  string `json:"status"`
+	Code    int    `json:"code"`
 	Message string `json:"message"`
-	Body    any    `json:"body"`
+	Data    any    `json:"data"`
 }
 
-func Success(c *gin.Context, httpCode int, msg string, body interface{}) {
-	switch httpCode / 100 {
-	case 2:
-		c.JSON(httpCode, response{
-			Status:  "success",
-			Message: msg,
-			Body:    body,
-		})
-
-	default:
-		c.JSON(500, response{
-			Status:  "error",
-			Message: "RESPONSE ERROR",
-			Body:    nil,
-		})
-	}
+type ErrorLog struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
-func FailOrError(c *gin.Context, httpCode int, msg string, err error) {
-	switch httpCode / 100 {
-	case 4:
-		c.JSON(httpCode, response{
-			Status:  "fail",
-			Message: msg,
-			Body:    err,
-		})
+func Success(ctx *gin.Context, httpCode int, msg string, data interface{}) {
+	ctx.JSON(httpCode, response{
+		Status:  "success",
+		Code:    httpCode,
+		Message: msg,
+		Data:    data,
+	})
+}
 
-	case 5:
-		c.JSON(httpCode, response{
-			Status:  "error",
-			Message: msg,
-			Body:    nil,
-		})
-
-	default:
-		c.JSON(500, response{
-			Status:  "error",
-			Message: "RESPONSE ERROR",
-			Body:    err,
-		})
-	}
+func Error(ctx *gin.Context, httpCode int, msg string, data interface{}) {
+	ctx.JSON(httpCode, response{
+		Status:  "error",
+		Code:    httpCode,
+		Message: msg,
+		Data:    data,
+	})
 }

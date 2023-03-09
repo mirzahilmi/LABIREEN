@@ -1,22 +1,20 @@
 package jwtx
 
 import (
-	"labireen/customer_microservices/account_service/entities"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type CustomerClaims struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	ID uuid.UUID `json:"id"`
 	jwt.RegisteredClaims
 }
 
-func NewCustomerClaims(user entities.CustomerLogin, exp time.Duration) CustomerClaims {
+func NewCustomerClaims(id uuid.UUID, exp time.Duration) CustomerClaims {
 	return CustomerClaims{
-		Email:    user.Email,
-		Password: user.Password,
+		ID: id,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(exp)),
 		},

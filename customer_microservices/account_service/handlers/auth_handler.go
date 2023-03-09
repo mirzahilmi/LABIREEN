@@ -11,7 +11,6 @@ import (
 	"labireen/customer_microservices/account_service/utilities/response"
 	"net/http"
 
-	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,22 +26,29 @@ func NewAuthHandler(svc services.AuthService, ml mail.EmailSender) *authHandler 
 func (aH *authHandler) RegisterCustomer(ctx *gin.Context) {
 	var request entities.CustomerRegister
 	if err := ctx.ShouldBindJSON(&request); err != nil {
-		response.FailOrError(ctx, http.StatusBadRequest, "Bad request", err)
+		log := response.ErrorLog{
+			Field:   "request",
+			Message: "Request does not fullfil requirements",
+		}
+		response.Error(ctx, http.StatusBadRequest, "Bad request", log)
 		return
 	}
 
 	if request.Password != request.PasswordConfirm {
-		response.FailOrError(ctx, http.StatusBadRequest, "Password do not match", nil)
+		log := response.ErrorLog{
+			Field:   "Password",
+			Message: "Password should be the same as Confirm Password",
+		}
+		response.Error(ctx, http.StatusForbidden, "Password mismatch", log)
 		return
 	}
 
 	//Generate Verification Code
-	tempCode := uniuri.NewLen(20)
-	code := crypto.Encode(tempCode)
+	code := crypto.Encode(request.Email)
 	request.VerificationCode = code
 
 	if err := aH.svc.RegisterCustomer(request); err != nil {
-		response.FailOrError(ctx, http.StatusInternalServerError, "Failed to register user", err)
+		response.Error(ctx, http.StatusInternalServerError, "Failed to register user", err.Error())
 		return
 	}
 
@@ -50,7 +56,7 @@ func (aH *authHandler) RegisterCustomer(ctx *gin.Context) {
 
 	emailData := mail.EmailData{
 		Email:   []string{request.Email},
-		URL:     os.Getenv("CLIENT_ORIGIN") + "/verifyemail/" + code,
+		URL:     os.Getenv("CLIENT_ORIGIN") + "/auth/verify/" + code,
 		Name:    request.Name,
 		Subject: "Your account verification code",
 	}
@@ -63,19 +69,23 @@ func (aH *authHandler) RegisterCustomer(ctx *gin.Context) {
 func (aH *authHandler) LoginCustomer(ctx *gin.Context) {
 	var request entities.CustomerLogin
 	if err := ctx.ShouldBindJSON(&request); err != nil {
-		response.FailOrError(ctx, http.StatusBadRequest, "Bad request", err)
+		log := response.ErrorLog{
+			Field:   "request",
+			Message: "Request does not fullfil requirements",
+		}
+		response.Error(ctx, http.StatusBadRequest, "Bad request", log)
 		return
 	}
 
-	err := aH.svc.LoginCustomer(request)
+	id, err := aH.svc.LoginCustomer(request)
 	if err != nil {
-		response.FailOrError(ctx, http.StatusUnauthorized, "Invalid email or password", err)
+		response.Error(ctx, http.StatusUnauthorized, "Failed to logged in", err.Error())
 		return
 	}
 
-	token, err := jwtx.GenerateToken(request)
+	token, err := jwtx.GenerateToken(id)
 	if err != nil {
-		response.FailOrError(ctx, http.StatusInternalServerError, "Server error, failed to generate token", err)
+		response.Error(ctx, http.StatusInternalServerError, "Server error, failed to generate token", err.Error())
 		return
 	}
 
@@ -86,7 +96,7 @@ func (aH *authHandler) VerifyEmail(ctx *gin.Context) {
 	code := ctx.Params.ByName("verification-code")
 
 	if err := aH.svc.VerifyCustomer(code); err != nil {
-		response.FailOrError(ctx, http.StatusBadRequest, "User already verified", err)
+		response.Error(ctx, http.StatusBadRequest, "User verification failed", err.Error())
 		return
 	}
 

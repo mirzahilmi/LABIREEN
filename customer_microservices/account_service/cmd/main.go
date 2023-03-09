@@ -15,11 +15,11 @@ import (
 )
 
 func main() {
+	// Load env file
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalln(".env file loading failed")
 	}
-	port := os.Getenv("PORT")
 
 	// Initialize database connection
 	db, err := config.GetDB()
@@ -44,10 +44,10 @@ func main() {
 	auth := r.Group("auth")
 	auth.POST("/register", authHandler.RegisterCustomer)
 	auth.POST("/login", authHandler.LoginCustomer)
-	auth.GET("/verifyemail/:verification-code", authHandler.VerifyEmail)
+	auth.GET("/verify/:verification-code", authHandler.VerifyEmail)
 
 	customer := r.Group("customer")
 	customer.GET("/profile", middleware.ValidateToken(), customerHandler.GetMe)
 
-	r.Run(":" + port)
+	r.Run(":" + os.Getenv("PORT"))
 }

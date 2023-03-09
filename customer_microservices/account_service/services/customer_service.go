@@ -3,11 +3,13 @@ package services
 import (
 	"labireen/customer_microservices/account_service/entities"
 	"labireen/customer_microservices/account_service/repositories"
+
+	"github.com/google/uuid"
 )
 
 type CustomerService interface {
 	UpdateCustomer(customer entities.CustomerRequest) error
-	GetCustomer(email string) (entities.CustomerRequest, error)
+	GetCustomer(id uuid.UUID) (entities.CustomerRequest, error)
 }
 
 type customerServiceImpl struct {
@@ -22,8 +24,8 @@ func (csr *customerServiceImpl) UpdateCustomer(customer entities.CustomerRequest
 	return nil
 }
 
-func (csr *customerServiceImpl) GetCustomer(email string) (entities.CustomerRequest, error) {
-	user, err := csr.repo.GetCustomerByEmail(email)
+func (csr *customerServiceImpl) GetCustomer(id uuid.UUID) (entities.CustomerRequest, error) {
+	user, err := csr.repo.GetById(id)
 	if err != nil {
 		return entities.CustomerRequest{}, err
 	}
