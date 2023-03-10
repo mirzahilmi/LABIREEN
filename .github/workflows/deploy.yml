@@ -19,14 +19,14 @@ jobs:
           go-version: "stable"
 
       - name: 📦 Go Build
-        working-directory: ./customer_microservice/account_service
+        working-directory: ./customer_microservices/account_service
         run: go build -o main ./cmd/main.go
 
       - name: 📁 Send files via Rsync
         uses: Burnett01/rsync-deployments@5.2.1
         with:
           switches: -avzr
-          path: ./customer_microservice/account_service/main
+          path: ./customer_microservices/account_service/main
           remote_path: ./mirza-hilmi
           remote_host: ${{ secrets.SSH_HOST }}
           remote_user: ${{ secrets.SSH_USERNAME }}
