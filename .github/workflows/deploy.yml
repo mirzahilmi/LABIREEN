@@ -12,9 +12,6 @@ jobs:
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
-      
-      - name: Change Directory
-        run: cd ./customer_microservices/account_service
 
       - name: 📦 Go Setup
         uses: actions/setup-go@v3
@@ -22,10 +19,12 @@ jobs:
           go-version: "stable"
 
       - name: 📦 Go Build
+        working-directory: ./customer_microservice/account_service
         run: go build -o main ./cmd/main.go
 
       - name: 📁 Send files via Rsync
         uses: Burnett01/rsync-deployments@5.2.1
+        working-directory: ./customer_microservice/account_service
         with:
           switches: -avzr
           path: ./main
