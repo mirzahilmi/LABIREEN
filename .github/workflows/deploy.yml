@@ -16,23 +16,26 @@ jobs:
       - name: 📦 Go Setup
         uses: actions/setup-go@v3
         with:
-          go-version: 'stable'
-      
+          go-version: "stable"
+
+      - name: Tree
+        run: tree
+
       - name: Change Directory
         run: cd ./customer_microservices/account_service
-        
+
       - name: 📦 Go Build
         run: go build -o ./main ./cmd/main.go
 
       - name: 📁 Send files via Rsync
         uses: Burnett01/rsync-deployments@5.2.1
         with:
-            switches: -avzr
-            path: ./main
-            remote_path: ./mirza-hilmi
-            remote_host: ${{ secrets.SSH_HOST }}
-            remote_user: ${{ secrets.SSH_USERNAME }}
-            remote_key: ${{ secrets.SSH_KEY }}
+          switches: -avzr
+          path: ./main
+          remote_path: ./mirza-hilmi
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USERNAME }}
+          remote_key: ${{ secrets.SSH_KEY }}
 
       - name: 🌟 Run server
         uses: appleboy/ssh-action@master
