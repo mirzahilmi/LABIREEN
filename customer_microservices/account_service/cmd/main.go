@@ -19,7 +19,7 @@ var (
 	app *gin.Engine
 )
 
-func main() {
+func init() {
 	// Load env file
 	err := godotenv.Load()
 	if err != nil {

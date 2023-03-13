@@ -1,2 +1,4 @@
 *.placeholder
 *.env
+*.key
+*.pem

@@ -3,12 +3,8 @@
 	"rewrites":
 	[
 		{
-			"source":"/auth(.*)",
-			"destination":"/routes/auth_routes.go"
-		},
-        {
-			"source":"/customer(.*)",
-			"destination":"/routes/customer_routes.go"
+			"source":"/api(.*)",
+			"destination":"/cmd/main.go"
 		}
 	]
 
