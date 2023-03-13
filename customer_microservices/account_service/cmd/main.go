@@ -8,18 +8,13 @@ import (
 	"labireen/customer_microservices/account_service/services"
 	"labireen/customer_microservices/account_service/utilities/mail"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-var (
-	app *gin.Engine
-)
-
-func init() {
+func main() {
 	// Load env file
 	err := godotenv.Load()
 	if err != nil {
@@ -44,6 +39,8 @@ func init() {
 	authHandler := handlers.NewAuthHandler(authService, emailService)
 	customerHandler := handlers.NewCustomerHandler(customerService)
 
+	app := gin.Default()
+
 	// Register auth routes
 	authRoutes := routes.AuthRoutes{
 		Router:      app,
@@ -57,8 +54,6 @@ func init() {
 		CustomerHandler: customerHandler,
 	}
 	customerRoutes.Register()
-}
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	app.ServeHTTP(w, r)
+	app.Run(":" + os.Getenv("PORT"))
 }
