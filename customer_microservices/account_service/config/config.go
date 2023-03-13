@@ -29,12 +29,12 @@ func GetDB() (*gorm.DB, error) {
 	}
 
 	// MySQL Configuration
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Name)
+	// dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	// 	dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Name)
 
 	// PostgreSQL Configuration
-	// dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s",
-	// 	dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
+	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s",
+		dbConfig.User, dbConfig.Password, dbConfig.Host, dbConfig.Port, dbConfig.Name)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
