@@ -58,7 +58,7 @@ func (asr *authServiceImpl) LoginCustomer(customer entities.CustomerLogin) (uuid
 	}
 
 	if !user.Verified {
-		return uuid.UUID{}, errors.New("user already verified")
+		return uuid.UUID{}, errors.New("user has not verified")
 	}
 
 	if err := crypto.CheckHash(customer.Password, user.Password); err != nil {

@@ -9,15 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type customerHandler struct {
+type CustomerHandler interface {
+	GetMe(ctx *gin.Context)
+}
+
+type customerHandlerImpl struct {
 	svc services.CustomerService
 }
 
-func NewCustomerHandler(svc services.CustomerService) *customerHandler {
-	return &customerHandler{svc}
+func NewCustomerHandler(svc services.CustomerService) *customerHandlerImpl {
+	return &customerHandlerImpl{svc}
 }
 
-func (cH *customerHandler) GetMe(ctx *gin.Context) {
+func (cH *customerHandlerImpl) GetMe(ctx *gin.Context) {
 	temp, exist := ctx.Get("currentUser")
 	if !exist {
 		log := response.ErrorLog{

@@ -36,9 +36,9 @@ func (r *authRepositoryImpl) GetById(id uuid.UUID) (*entities.Customer, error) {
 	return &customer, nil
 }
 
-func (r *authRepositoryImpl) GetWhere(param string, email string) (*entities.Customer, error) {
+func (r *authRepositoryImpl) GetWhere(param string, args string) (*entities.Customer, error) {
 	var customer entities.Customer
-	if err := r.db.Where(param+" = ?", email).First(&customer).Error; err != nil {
+	if err := r.db.Where(param+" = ?", args).First(&customer).Error; err != nil {
 		return nil, err
 	}
 

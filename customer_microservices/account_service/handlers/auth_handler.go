@@ -14,16 +14,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type authHandler struct {
+type AuthHandler interface {
+	RegisterCustomer(ctx *gin.Context)
+	LoginCustomer(ctx *gin.Context)
+	VerifyEmail(ctx *gin.Context)
+}
+
+type authHandlerImpl struct {
 	svc services.AuthService
 	ml  mail.EmailSender
 }
 
-func NewAuthHandler(svc services.AuthService, ml mail.EmailSender) *authHandler {
-	return &authHandler{svc, ml}
+func NewAuthHandler(svc services.AuthService, ml mail.EmailSender) *authHandlerImpl {
+	return &authHandlerImpl{svc, ml}
 }
 
-func (aH *authHandler) RegisterCustomer(ctx *gin.Context) {
+func (aH *authHandlerImpl) RegisterCustomer(ctx *gin.Context) {
 	var request entities.CustomerRegister
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		log := response.ErrorLog{
@@ -66,7 +72,7 @@ func (aH *authHandler) RegisterCustomer(ctx *gin.Context) {
 	response.Success(ctx, http.StatusOK, "User successfuly created, please check your email for email verification", request)
 }
 
-func (aH *authHandler) LoginCustomer(ctx *gin.Context) {
+func (aH *authHandlerImpl) LoginCustomer(ctx *gin.Context) {
 	var request entities.CustomerLogin
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		log := response.ErrorLog{
@@ -92,7 +98,7 @@ func (aH *authHandler) LoginCustomer(ctx *gin.Context) {
 	response.Success(ctx, http.StatusOK, "Login Successful", token)
 }
 
-func (aH *authHandler) VerifyEmail(ctx *gin.Context) {
+func (aH *authHandlerImpl) VerifyEmail(ctx *gin.Context) {
 	code := ctx.Params.ByName("verification-code")
 
 	if err := aH.svc.VerifyCustomer(code); err != nil {

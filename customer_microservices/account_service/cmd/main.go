@@ -3,15 +3,20 @@ package main
 import (
 	"labireen/customer_microservices/account_service/config"
 	"labireen/customer_microservices/account_service/handlers"
-	"labireen/customer_microservices/account_service/middleware"
 	"labireen/customer_microservices/account_service/repositories"
+	"labireen/customer_microservices/account_service/routes"
 	"labireen/customer_microservices/account_service/services"
 	"labireen/customer_microservices/account_service/utilities/mail"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+)
+
+var (
+	app *gin.Engine
 )
 
 func main() {
@@ -34,20 +39,26 @@ func main() {
 
 	emailService := mail.NewGmailSender(os.Getenv("EMAIL_SENDER_NAME"), os.Getenv("EMAIL_SENDER_ADDRESS"), os.Getenv("EMAIL_SENDER_PASSWORD"))
 	authService := services.NewAuthService(repositories.NewCustomerRepository(db))
-	authHandler := handlers.NewAuthHandler(authService, emailService)
-
 	customerService := services.NewCustomerService(repositories.NewCustomerRepository(db))
+
+	authHandler := handlers.NewAuthHandler(authService, emailService)
 	customerHandler := handlers.NewCustomerHandler(customerService)
 
-	r := gin.Default()
+	// Register auth routes
+	authRoutes := routes.AuthRoutes{
+		Router:      app,
+		AuthHandler: authHandler,
+	}
+	authRoutes.Register()
 
-	auth := r.Group("auth")
-	auth.POST("/register", authHandler.RegisterCustomer)
-	auth.POST("/login", authHandler.LoginCustomer)
-	auth.GET("/verify/:verification-code", authHandler.VerifyEmail)
+	// Register customer routes
+	customerRoutes := routes.CustomerRoutes{
+		Router:          app,
+		CustomerHandler: customerHandler,
+	}
+	customerRoutes.Register()
+}
 
-	customer := r.Group("customer")
-	customer.GET("/profile", middleware.ValidateToken(), customerHandler.GetMe)
-
-	r.Run(":" + os.Getenv("PORT"))
+func Handler(w http.ResponseWriter, r *http.Request) {
+	app.ServeHTTP(w, r)
 }
