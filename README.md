@@ -18,49 +18,74 @@ go run cmd/main.go
 
 You can now send HTTP requests to your localhost using [Postman][Postman Website] or any other API platform.
 
-### Initial Configuration
+## Endpoint Reference
+The following endpoints are available through
 
-Some projects require initial configuration (e.g. access tokens or keys, `npm i`).
-This is the section where you would document those requirements.
+`https://mirzahlm.aenzt.tech/`
 
-## Developing
+### Authentication
+**Description** : Customer account authentication that includes registration, login, and email verification
 
-Here's a brief intro about what a developer must do in order to start developing
-the project further:
+#### POST `{url}/auth/register`
+**Parameters**
+| Parameter        | Type   | Required | Description                                                     |
+|------------------|--------|----------|-----------------------------------------------------------------|
+| name             | string | YES      | Customer full name                                              |
+| email            | string | YES      | Customer Customer email (should be a valid email)                          |
+| password         | string | YES      | Customer Account Password (should be at least 8 character long) |
+| password_confirm | string | YES      | The value should be the same as "password" field                |
+| phone_number     | string | YES      | Customer Account phone number (max 15 character long)           |
 
-```shell
-git clone https://github.com/your/awesome-project.git
-cd awesome-project/
-packagemanager install
+**Response**
+```json
+{
+    "status": "success",
+    "code": 200,
+    "message": "User successfuly created, please check your email for email verification",
+    "data": {
+        "name": " ",
+        "email": " ",
+        "password": " ",
+        "password_confirm": " ",
+        "phone_number": " ",
+        "verification_code": " "
+    }
+}
+```
+```json
+{
+    "status": "error",
+    "code": 500,
+    "message": "Failed to register user",
+    "data": "Error 1062 (23000): Duplicate entry '123456789' for key 'customers.phone_number'"
+}
 ```
 
-And state what happens step-by-step.
+#### POST `{url}/auth/login`
+**Parameters**
+| Parameter | Type   | Required | Description                            |
+|-----------|--------|----------|----------------------------------------|
+| email     | string | YES      | Customer registered and verified email |
+| password  | string | YES      | Customer registered Account password   |
 
-### Building
-
-If your project needs some additional steps for the developer to build the
-project after some code changes, state them here:
-
-```shell
-./configure
-make
-make install
+**Response**
+```json
+{
+    "status": "success",
+    "code": 200,
+    "message": "Login Successful",
+    "data": " here is the jwt token "
+}
 ```
 
-Here again you should state what actually happens when the code above gets
-executed.
-
-### Deploying / Publishing
-
-In case there's some step you have to take that publishes this project to a
-server, this is the right time to state it.
-
-```shell
-packagemanager deploy awesome-project -s server.com -u username -p password
+```json
+{
+    "status": "error",
+    "code": 401,
+    "message": "Failed to logged in",
+    "data": "user has not verified"
+}
 ```
-
-And again you'd need to tell what the previous code actually does.
-
 ## Features
 
 What's all the bells and whistles this project can perform?
