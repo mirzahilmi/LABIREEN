@@ -88,10 +88,11 @@ The following endpoints are available through
 ```
 ## Features
 
-What's all the bells and whistles this project can perform?
-* What's the main functionality
-* You can also do another thing
-* If you get really randy, you can even do this
+Here is a list of features available in this project :
+* Customer Account Sign-up
+* Customer Account Sign-in
+* Email Verification for Customer Accounts
+* Customer Account Profile Editing
 
 ## Configuration
 
