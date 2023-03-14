@@ -1,8 +1,8 @@
 package services
 
 import (
-	"labireen/order_service/entities"
-	"labireen/order_service/repositories"
+	"labireen/entities"
+	"labireen/repositories"
 
 	"github.com/google/uuid"
 )

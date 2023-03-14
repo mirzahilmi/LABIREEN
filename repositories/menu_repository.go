@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"labireen/order_service/entities"
+	"labireen/entities"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

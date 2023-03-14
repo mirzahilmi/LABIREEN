@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"labireen/order_service/pkg/jwtx"
-	"labireen/order_service/pkg/response"
+	"labireen/pkg/jwtx"
+	"labireen/pkg/response"
 	"net/http"
 	"os"
 	"strings"

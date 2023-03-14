@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"labireen/order_service/entities"
-	"labireen/order_service/pkg/jwtx"
-	"labireen/order_service/pkg/response"
-	"labireen/order_service/services"
+	"labireen/entities"
+	"labireen/pkg/jwtx"
+	"labireen/pkg/response"
+	"labireen/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

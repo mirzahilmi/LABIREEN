@@ -1,11 +1,11 @@
 package main
 
 import (
-	"labireen/order_service/config"
-	"labireen/order_service/handlers"
-	"labireen/order_service/middleware"
-	"labireen/order_service/repositories"
-	"labireen/order_service/services"
+	"labireen/config"
+	"labireen/handlers"
+	"labireen/middleware"
+	"labireen/repositories"
+	"labireen/services"
 	"log"
 	"os"
 
