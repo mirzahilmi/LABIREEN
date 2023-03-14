@@ -94,69 +94,35 @@ Here is a list of features available in this project :
 * Email Verification for Customer Accounts
 * Customer Account Profile Editing
 
-## Configuration
-
-Here you should write what are all of the configurations a user can enter when
-using the project.
-
-#### Argument 1
-Type: `String`  
-Default: `'default value'`
-
-State what an argument does and how you can use it. If needed, you can provide
-an example below.
-
-Example:
-```bash
-awesome-project "Some other value"  # Prints "You're nailing this readme!"
-```
-
-#### Argument 2
-Type: `Number|Boolean`  
-Default: 100
-
-Copy-paste as many of these as you need.
-
-## Contributing
-
-When you publish something open source, one of the greatest motivations is that
-anyone can just jump in and start contributing to your project.
-
-These paragraphs are meant to welcome those kind souls to feel that they are
-needed. You should state something like:
-
-"If you'd like to contribute, please fork the repository and use a feature
-branch. Pull requests are warmly welcome."
-
-If there's anything else the developer needs to know (e.g. the code style
-guide), you should link it here. If there's a lot of things to take into
-consideration, it is common to separate this section to its own file called
-`CONTRIBUTING.md` (or similar). If so, you should say that it exists here.
-
 ## Links
 
-Even though this information can be found inside the project on machine-readable
-format like in a .json file, it's good to include a summary of most useful
-links to humans using your project. You can include links like:
-
-- Project homepage: https://your.github.com/awesome-project/
-- Repository: https://github.com/your/awesome-project/
-- Issue tracker: https://github.com/your/awesome-project/issues
+- Project Author: https://github.com/MirzaHilmi/
+- Repository: https://github.com/MirzaHilmi/LABIREEN
+- Issue tracker: https://github.com/MirzaHilmi/LABIREEN/issues
   - In case of sensitive bugs like security vulnerabilities, please contact
-    my@email.com directly instead of using issue tracker. We value your effort
+   exquisitemirza@gmail.com directly instead of using issue tracker. We value your effort
     to improve the security and privacy of this project!
-- Related projects:
-  - Your other project: https://github.com/your/other-project/
-  - Someone else's project: https://github.com/someones/awesome-project/
+- Related projects :
+  - My other project : 
+    - https://github.com/MirzaHilmi/LABIREEN-Customer
+    - https://github.com/MirzaHilmi/LABIREEN-Merchant
 
 
 ## Licensing
 
-One really important part: Give your project a proper license. Here you should
-state what the license is and how to find the text version of the license.
-Something like:
+This project is licensed under the terms of the MIT License.
 
-"The code in this project is licensed under MIT license."
+**What does this mean?**
+
+The MIT License is a permissive open source license that allows you to use, copy, modify, merge, publish, distribute, and/or sell copies of the software, as long as you include the original copyright and license notice in any copies or substantial portions of the software.
+
+**Why did we choose the MIT License?**
+
+We chose the MIT License because it is a widely recognized and well-understood open source license that provides a good balance between permissiveness and protection. We want to encourage the use, modification, and distribution of our software, while also protecting our contributors and users.
+
+**Can I contribute?**
+
+Yes! We welcome contributions from anyone, under the same terms as the license. Please read our Contributing Guidelines for more information.
 
 [Git Website]: https://git-scm.com/
 [Go Website]: https://go.dev/
