@@ -8,9 +8,11 @@ import (
 )
 
 type MenuService interface {
-	CreateMenu(menu entities.MenuRequestParams, id uuid.UUID) error
-	GetMenu(id uuid.UUID) (entities.Menu, error)
+	CreateMenu(menu entities.MenuRequestParams) error
+	GetAllMenu() ([]entities.Menu, error)
+	GetMenu(name string) (entities.Menu, error)
 	EditMenu(menu entities.MenuRequestParams) error
+	DeleteMenu(id uuid.UUID) error
 }
 
 type menuServiceImpl struct {
@@ -21,11 +23,12 @@ func NewMenuService(rp repositories.MenuRepository) MenuService {
 	return &menuServiceImpl{rp}
 }
 
-func (svc *menuServiceImpl) CreateMenu(menu entities.MenuRequestParams, id uuid.UUID) error {
+func (svc *menuServiceImpl) CreateMenu(menu entities.MenuRequestParams) error {
 
 	newMenu := entities.Menu{
 		ID:         uuid.New(),
-		MerchantID: id,
+		NMID:       menu.MenuRequests.NMID,
+		MerchantID: menu.MenuRequests.MerchantID,
 		Name:       menu.MenuRequests.Name,
 		MenuGroups: make([]entities.MenuGroup, len(menu.MenuRequests.MenuGroups)),
 	}
@@ -59,8 +62,17 @@ func (svc *menuServiceImpl) CreateMenu(menu entities.MenuRequestParams, id uuid.
 
 	return nil
 }
-func (svc *menuServiceImpl) GetMenu(id uuid.UUID) (entities.Menu, error) {
-	menu, err := svc.rp.GetWhere("merchant_id", id.String())
+
+func (svc *menuServiceImpl) GetAllMenu() ([]entities.Menu, error) {
+	menus, err := svc.rp.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return *menus, nil
+}
+
+func (svc *menuServiceImpl) GetMenu(name string) (entities.Menu, error) {
+	menu, err := svc.rp.GetWhere("name", name)
 	if err != nil {
 		return entities.Menu{}, err
 	}
@@ -98,6 +110,14 @@ func (svc *menuServiceImpl) EditMenu(menu entities.MenuRequestParams) error {
 	}
 
 	if err := svc.rp.Update(menuSearch); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (svc *menuServiceImpl) DeleteMenu(id uuid.UUID) error {
+	if err := svc.rp.Delete(id); err != nil {
 		return err
 	}
 

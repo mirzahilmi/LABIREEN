@@ -5,7 +5,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type MenuClaims struct {
+type UserClaims struct {
 	ID uuid.UUID `json:"id"`
 	jwt.RegisteredClaims
 }

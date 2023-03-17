@@ -3,12 +3,12 @@ module labireen
 go 1.20
 
 require (
+	github.com/dchest/uniuri v1.2.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/golang-jwt/jwt/v5 v5.0.0-rc.1
 	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
 	github.com/midtrans/midtrans-go v1.3.6
-	github.com/shopspring/decimal v1.3.1
 	gorm.io/driver/mysql v1.4.7
 	gorm.io/gorm v1.24.6
 )

@@ -3,14 +3,16 @@ package main
 import (
 	"labireen/config"
 	"labireen/handlers"
-	"labireen/middleware"
 	"labireen/repositories"
+	"labireen/routes"
 	"labireen/services"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/coreapi"
 )
 
 func main() {
@@ -31,14 +33,30 @@ func main() {
 		log.Fatalln("Auto Migration failed")
 	}
 
+	cr := coreapi.Client{}
+	cr.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
+
 	menuService := services.NewMenuService(repositories.NewMenuRepository(db))
 	menuHandler := handlers.NewMenuHandler(menuService)
 
-	r := gin.Default()
+	orderService := services.NewOrderService(cr, repositories.NewOrderRepository(db))
+	orderHandler := handlers.NewOrderHandler(orderService)
 
-	menu := r.Group("menu")
-	menu.POST("create", middleware.ValidateToken(), menuHandler.CreateMenu)
-	menu.GET("view", middleware.ValidateToken(), menuHandler.ViewMenu)
+	app := gin.Default()
 
-	r.Run(":" + os.Getenv("PORT"))
+	// Register menu routes
+	menuRoutes := routes.MenuRoutes{
+		Router:      app,
+		MenuHandler: menuHandler,
+	}
+	menuRoutes.Register()
+
+	// Register order routes
+	orderRoutes := routes.OrderRoutes{
+		Router:       app,
+		OrderHandler: orderHandler,
+	}
+	orderRoutes.Register()
+
+	app.Run("127.0.0.2:8080")
 }

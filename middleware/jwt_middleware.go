@@ -27,7 +27,7 @@ func ValidateToken() gin.HandlerFunc {
 		}
 
 		tokenJwt := authorization[7:]
-		claims := jwtx.MenuClaims{}
+		claims := jwtx.UserClaims{}
 		jwtKey := os.Getenv("SECRET")
 
 		if err := jwtx.DecodeToken(tokenJwt, &claims, jwtKey); err != nil {

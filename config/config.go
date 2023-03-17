@@ -56,5 +56,8 @@ func Migrate(db *gorm.DB) error {
 		&entities.Menu{},
 		&entities.MenuGroup{},
 		&entities.MenuItem{},
+		&entities.Order{},
+		&entities.OrderItem{},
+		&entities.OrderStatus{},
 	)
 }
