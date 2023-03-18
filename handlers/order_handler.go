@@ -48,3 +48,15 @@ func (hdl *orderHandler) CreateOrder(ctx *gin.Context) {
 
 	response.Success(ctx, http.StatusOK, "Order successfuly created", resp.StatusMessage)
 }
+
+func (hdl *orderHandler) UpdateOrder(ctx *gin.Context) {
+	var order entities.OrderRequestParams
+	if err := ctx.ShouldBindJSON(&order); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "Bad request", err.Error())
+		return
+	}
+
+	if err := hdl.svc.EditOrder(order); err != nil {
+		response.Error(ctx, http.StatusNotAcceptable, "Request Error", err.Error())
+	}
+}

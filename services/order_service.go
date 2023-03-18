@@ -124,13 +124,9 @@ func (svc *orderServiceImpl) EditOrder(order entities.OrderRequestParams) error 
 
 	return nil
 }
-func (svc *orderServiceImpl) DeleteOrder(id uuid.UUID) error {
-	order, err := svc.rp.GetByID("customer_id", id)
-	if err != nil {
-		return err
-	}
 
-	if err := svc.rp.Delete(order); err != nil {
+func (svc *orderServiceImpl) DeleteOrder(id uuid.UUID) error {
+	if err := svc.rp.Delete(id); err != nil {
 		return err
 	}
 

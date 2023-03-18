@@ -58,5 +58,5 @@ func main() {
 	}
 	orderRoutes.Register()
 
-	app.Run("127.0.0.2:8080")
+	app.Run(os.Getenv("APP_PORT"))
 }

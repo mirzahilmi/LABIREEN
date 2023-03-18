@@ -9,6 +9,7 @@ import (
 
 type OrderRepository interface {
 	Create(order *entities.Order) error
+	GetByID(param string, id uuid.UUID) (*entities.Order, error)
 	GetAllByCustomer(id uuid.UUID) (*[]entities.Order, error)
 	GetAllByMerchant(id uuid.UUID) (*[]entities.Order, error)
 	Update(order *entities.Order) error

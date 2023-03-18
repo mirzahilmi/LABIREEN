@@ -21,7 +21,7 @@ You can now send HTTP requests to your localhost using [Postman][Postman Website
 ## Endpoint Reference
 The following endpoints are available through
 
-`https://mirzahlm.aenzt.tech/`
+`https://mirzahlm.aenzt.tech/` or `http://surface-protest.at.ply.gg:55496`
 
 ### Authentication
 **Description** : Customer account authentication that includes registration, login, and email verification
