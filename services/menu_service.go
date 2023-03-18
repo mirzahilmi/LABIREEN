@@ -8,7 +8,7 @@ import (
 )
 
 type MenuService interface {
-	CreateMenu(menu entities.MenuRequestParams) error
+	CreateMenu(menu entities.MenuRegisterParams) error
 	GetAllMenu() ([]entities.Menu, error)
 	GetMenu(name string) (entities.Menu, error)
 	EditMenu(menu entities.MenuRequestParams) error
@@ -23,17 +23,16 @@ func NewMenuService(rp repositories.MenuRepository) MenuService {
 	return &menuServiceImpl{rp}
 }
 
-func (svc *menuServiceImpl) CreateMenu(menu entities.MenuRequestParams) error {
+func (svc *menuServiceImpl) CreateMenu(menu entities.MenuRegisterParams) error {
 
 	newMenu := entities.Menu{
 		ID:         uuid.New(),
-		NMID:       menu.MenuRequests.NMID,
-		MerchantID: menu.MenuRequests.MerchantID,
-		Name:       menu.MenuRequests.Name,
-		MenuGroups: make([]entities.MenuGroup, len(menu.MenuRequests.MenuGroups)),
+		MerchantID: menu.MenuRegister.MerchantID,
+		Name:       menu.MenuRegister.Name,
+		MenuGroups: make([]entities.MenuGroup, len(menu.MenuRegister.MenuGroups)),
 	}
 
-	for i, groupRequest := range menu.MenuRequests.MenuGroups {
+	for i, groupRequest := range menu.MenuRegister.MenuGroups {
 		newMenu.MenuGroups[i] = entities.MenuGroup{
 			ID:          uuid.New(),
 			Name:        groupRequest.Name,
@@ -81,35 +80,38 @@ func (svc *menuServiceImpl) GetMenu(name string) (entities.Menu, error) {
 }
 
 func (svc *menuServiceImpl) EditMenu(menu entities.MenuRequestParams) error {
-	menuSearch, err := svc.rp.GetByID(menu.MenuRequests.MerchantID)
+	menuResp, err := svc.rp.GetWhere("name", menu.MenuRequests.Name)
 	if err != nil {
 		return err
 	}
 
-	menuSearch.Name = menu.MenuRequests.Name
-	menuSearch.MenuGroups = make([]entities.MenuGroup, len(menuSearch.MenuGroups))
+	menuResp = &entities.Menu{
+		MerchantID: menu.MenuRequests.MerchantID,
+		Name:       menu.MenuRequests.Name,
+		MenuGroups: make([]entities.MenuGroup, len(menuResp.MenuGroups)),
+	}
 
-	for i, groupRequest := range menuSearch.MenuGroups {
-		menuSearch.MenuGroups[i] = entities.MenuGroup{
+	for i, groupRequest := range menuResp.MenuGroups {
+		menuResp.MenuGroups[i] = entities.MenuGroup{
 			Name:        groupRequest.Name,
 			Description: groupRequest.Description,
+			MenuID:      menuResp.ID,
 			MenuItems:   make([]entities.MenuItem, len(groupRequest.MenuItems)),
-			MenuID:      menuSearch.ID,
 		}
 
 		for j, itemRequest := range groupRequest.MenuItems {
-			menuSearch.MenuGroups[i].MenuItems[j] = entities.MenuItem{
+			menuResp.MenuGroups[i].MenuItems[j] = entities.MenuItem{
 				Name:        itemRequest.Name,
 				Price:       itemRequest.Price,
 				Description: itemRequest.Description,
 				Stock:       itemRequest.Stock,
 				Photo:       itemRequest.Photo,
-				MenuGroupID: menuSearch.MenuGroups[i].ID,
+				MenuGroupID: menuResp.MenuGroups[i].ID,
 			}
 		}
 	}
 
-	if err := svc.rp.Update(menuSearch); err != nil {
+	if err := svc.rp.Update(menuResp); err != nil {
 		return err
 	}
 

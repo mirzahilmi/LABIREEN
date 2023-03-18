@@ -9,8 +9,7 @@ import (
 type Menu struct {
 	ID         uuid.UUID   `gorm:"primaryKey;autoIncrement:false"`
 	MerchantID uuid.UUID   `gorm:"not null;size:36"`
-	NMID       string      `gorm:"not null"`
-	Name       string      `gorm:"not null"`
+	Name       string      `gorm:"not null;uniqueIndex;size:255"`
 	CreatedAt  time.Time   `gorm:"autoCreateTime"`
 	UpdatedAt  time.Time   `gorm:"autoUpdateTime"`
 	MenuGroups []MenuGroup `gorm:"foreignKey:MenuID"`

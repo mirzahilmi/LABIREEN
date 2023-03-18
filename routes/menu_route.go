@@ -17,5 +17,6 @@ func (r *MenuRoutes) Register() {
 	Menu.POST("/create", r.MenuHandler.CreateMenu)
 	Menu.GET("/view", r.MenuHandler.ViewMenu)
 	Menu.GET("/view/:merchant-name", r.MenuHandler.ViewMenu)
+	Menu.PUT("/edit", r.MenuHandler.UpdateMenu)
 	Menu.DELETE("/delete", middleware.ValidateToken(), r.MenuHandler.DeleteMenu)
 }

@@ -57,9 +57,14 @@ func (r *menuRepositoryImpl) GetWhere(param string, args string) (*entities.Menu
 func (r *menuRepositoryImpl) Update(menu *entities.Menu) error {
 	return r.db.Save(&menu).Error
 }
+
 func (r *menuRepositoryImpl) Delete(id uuid.UUID) error {
 	var menu entities.Menu
 	if err := r.db.Where("merchant_id = ?", id).Preload("MenuGroups.MenuItems.OrderItems").First(&menu).Error; err != nil {
+		return err
+	}
+
+	if err := r.db.Delete(&menu).Error; err != nil {
 		return err
 	}
 

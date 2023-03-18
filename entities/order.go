@@ -11,7 +11,7 @@ type Order struct {
 	OrderStatuses OrderStatus `gorm:"foreignKey:OrderID"`
 	MerchantID    uuid.UUID   `gorm:"not null"`
 	CustomerID    uuid.UUID   `gorm:"not null"`
-	NMID          string      `gorm:"not null"`
+	TransactionID uuid.UUID   `gorm:"not null"`
 	Gross         int64       `gorm:"not null"`
 	Paid          bool        `gorm:"default:false"`
 	OrderPlaced   time.Time   `gorm:"autoCreateTime"`

@@ -13,6 +13,7 @@ import (
 type MenuHandler interface {
 	CreateMenu(ctx *gin.Context)
 	ViewMenu(ctx *gin.Context)
+	UpdateMenu(ctx *gin.Context)
 	DeleteMenu(ctx *gin.Context)
 }
 
@@ -25,7 +26,7 @@ func NewMenuHandler(svc services.MenuService) *menuHandler {
 }
 
 func (hdl *menuHandler) CreateMenu(ctx *gin.Context) {
-	var request entities.MenuRequestParams
+	var request entities.MenuRegisterParams
 	if err := ctx.ShouldBindJSON(&request); err != nil {
 		response.Error(ctx, http.StatusBadRequest, "Bad request", err.Error())
 		return
@@ -62,6 +63,21 @@ func (hdl *menuHandler) ViewMenu(ctx *gin.Context) {
 	response.Success(ctx, http.StatusOK, "success", resp)
 }
 
+func (hdl *menuHandler) UpdateMenu(ctx *gin.Context) {
+	var menu entities.MenuRequestParams
+	if err := ctx.ShouldBindJSON(&menu); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "Bad request", err.Error())
+		return
+	}
+
+	if err := hdl.svc.EditMenu(menu); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "Failed", err.Error())
+		return
+	}
+
+	response.Success(ctx, http.StatusOK, "success", menu)
+}
+
 func (hdl *menuHandler) DeleteMenu(ctx *gin.Context) {
 	temp, exist := ctx.Get("currentUser")
 	if !exist {
@@ -70,6 +86,7 @@ func (hdl *menuHandler) DeleteMenu(ctx *gin.Context) {
 			Message: "Key token value does not exists",
 		}
 		response.Error(ctx, http.StatusNotFound, "Key error", log)
+		return
 	}
 
 	user := temp.(jwtx.UserClaims)

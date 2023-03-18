@@ -34,7 +34,6 @@ func (svc *orderServiceImpl) RegisterOrder(order entities.OrderRequestParams, id
 		OrderStatuses: entities.OrderStatus{ID: uuid.New()},
 		MerchantID:    order.OrderRequests.MerchantID,
 		CustomerID:    id,
-		NMID:          order.OrderRequests.NMID,
 		Gross:         sumOrderGross(order),
 		Paid:          false,
 		OrderPlaced:   time.Now(),
@@ -81,7 +80,7 @@ func (svc *orderServiceImpl) RegisterOrder(order entities.OrderRequestParams, id
 
 	coreApiRes, err := svc.cr.ChargeTransaction(chargeReq)
 	if err != nil {
-		return coreapi.ChargeResponse{}, err
+		return coreapi.ChargeResponse{}, err.RawError
 	}
 
 	if err := svc.rp.Create(&newOrder); err != nil {

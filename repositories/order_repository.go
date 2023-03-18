@@ -9,10 +9,10 @@ import (
 
 type OrderRepository interface {
 	Create(order *entities.Order) error
-	GetByID(param string, id uuid.UUID) (*entities.Order, error)
-	GetWhere(param string, args string) (*entities.Order, error)
+	GetAllByCustomer(id uuid.UUID) (*[]entities.Order, error)
+	GetAllByMerchant(id uuid.UUID) (*[]entities.Order, error)
 	Update(order *entities.Order) error
-	Delete(order *entities.Order) error
+	Delete(id uuid.UUID) error
 }
 
 type orderRepositoryImpl struct {
@@ -29,26 +29,39 @@ func (r *orderRepositoryImpl) Create(order *entities.Order) error {
 
 func (r *orderRepositoryImpl) GetByID(param string, id uuid.UUID) (*entities.Order, error) {
 	var order entities.Order
-	if err := r.db.Where(param+" = ?", id.String()).Preload("OrderStatuses.OrderItems").First(&order).Error; err != nil {
+	if err := r.db.Where(param+" = ?", id).Preload("OrderStatuses.OrderItems").First(&order).Error; err != nil {
 		return nil, err
 	}
 
 	return &order, nil
 }
 
-func (r *orderRepositoryImpl) GetWhere(param string, args string) (*entities.Order, error) {
-	var order entities.Order
-	if err := r.db.Where(param+" = ?", args).Preload("OrderStatuses.OrderItems").First(&order).Error; err != nil {
+func (r *orderRepositoryImpl) GetAllByCustomer(id uuid.UUID) (*[]entities.Order, error) {
+	var orders []entities.Order
+	if err := r.db.Where("customer_id = ?", id).Preload("OrderStatuses.OrderItems").Find(&orders).Error; err != nil {
 		return nil, err
 	}
 
-	return &order, nil
+	return &orders, nil
+}
+func (r *orderRepositoryImpl) GetAllByMerchant(id uuid.UUID) (*[]entities.Order, error) {
+	var orders []entities.Order
+	if err := r.db.Where("merchant_id = ?", id).Preload("OrderStatuses.OrderItems").Find(&orders).Error; err != nil {
+		return nil, err
+	}
+
+	return &orders, nil
 }
 
 func (r *orderRepositoryImpl) Update(order *entities.Order) error {
 	return r.db.Save(&order).Error
 }
 
-func (r *orderRepositoryImpl) Delete(order *entities.Order) error {
-	return r.db.Delete(&order).Error
+func (r *orderRepositoryImpl) Delete(id uuid.UUID) error {
+	var orders []entities.Order
+	if err := r.db.Where("merchant_id = ?", id).Preload("OrderStatuses.OrderItems").Find(&orders).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
